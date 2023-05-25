@@ -40,7 +40,7 @@ void create_leaf_node(node_t *node_arr, rectangle_t **temp, int node_id_counter,
 void create_node(node_t *node_arr, int node_id_counter, int last_node, int nodes, int node_capacity);
 
 int main(int argc, char *argv[]) {
-	FILE *infile, *outfile, *queries_file;
+	FILE *infile, *outfile;
 	char buf[1024], *dup, ch;
 	int i, j, m, k = 0, total_rectangles = 0, number_of_leaves = 0, number_of_slices = 0, node_capacity = 0, last_slice_size = 0, slice_size = 0, node_id_counter = 0, level = 0, nodes = 0, last_node;
 	rectangle_t rect, *rect_arr, **slices_arr, **temp, query;
