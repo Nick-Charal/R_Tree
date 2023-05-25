@@ -38,9 +38,6 @@ void attributes(rectangle_t *rect, char *line);
 void quick_sort(rectangle_t *arr, int first, int last, int type);
 void create_leaf_node(node_t *node_arr, rectangle_t **temp, int node_id_counter, int node_capacity);
 void create_node(node_t *node_arr, int node_id_counter, int last_node, int nodes, int node_capacity);
-void intersection(queries_t *inter, node_t *current_node, rectangle_t *query);
-void inside(queries_t *ins, node_t *current_node, rectangle_t *query);
-void containment(queries_t *cont, node_t *current_node, rectangle_t *query);
 
 int main(int argc, char *argv[]) {
 	FILE *infile, *outfile, *queries_file;
@@ -54,7 +51,6 @@ int main(int argc, char *argv[]) {
 
 	if ((infile = fopen(argv[1], "r")) == NULL) {exit(-1);}
 	if ((outfile = fopen("rtree.txt", "w")) == NULL) {exit(-1);}
-	//if ((queries_file = fopen(argv[2], "r")) == NULL) {exit(-1);}
 
 	while (fgets(buf, 1024, infile) != NULL) {
 		total_rectangles++;
@@ -199,56 +195,7 @@ int main(int argc, char *argv[]) {
 		printf("%d\t%d\t%.6lf\n", levels[i].level_id, levels[i].nodes, levels[i].mean_area);
 	}
 	
-	/*while (fgets(buf, 1024, queries_file) != NULL) {
-		dup = strdup(buf);
-		attributes(&query, dup);
-		free(dup);
-		
-		/1*for (i = 0, j = 0; i < total_rectangles; i++) {
-			if ((rect_arr[i].x_low < query.x_high && ((rect_arr[i].y_high > query.y_high && rect_arr[i].y_low < query.y_high) || (rect_arr[i].y_high < query.y_high && (rect_arr[i].y_low < query.y_low || (rect_arr[i].y_low > query.y_low && rect_arr[i].x_high > query.x_high))))) || (rect_arr[i].x_high > query.x_low && ((rect_arr[i].y_high > query.y_high && rect_arr[i].y_low < query.y_high) || (rect_arr[i].y_high > query.y_high && (rect_arr[i].y_low < query.y_low || (rect_arr[i].y_low > query.y_low && rect_arr[i].x_low < query.x_low))))) || (rect_arr[i].y_low < query.y_high && ((rect_arr[i].x_low < query.x_low && rect_arr[i].x_high > query.x_low) || (rect_arr[i].x_low > query.x_low && (rect_arr[i].x_high > query.x_high || (rect_arr[i].x_high < query.x_high && rect_arr[i].y_high > query.y_high))))) || (rect_arr[i].y_high > query.y_low && ((rect_arr[i].x_low < query.x_low && rect_arr[i].x_high > query.x_low) || (rect_arr[i].x_low > query.x_high && (rect_arr[i].x_high > query.x_high || (rect_arr[i].x_high < query.x_high && rect_arr[i].y_low < query.x_low)))))) {
-				j++;
-			}
-		}
-		printf("%d\n", j);*1/
-		intersection(&inter, root, &query);
-		inside(&ins, root, &query);
-		containment(&cont, root, &query);
-		printf("Query: %d\n\t\t\tResults\t\tNode accesses\nIntersection:\t\t%d\t\t%d\nInside:\t\t\t%d\t\t%d\nContainment:\t\t%d\t\t%d\n\n", query.object_id, inter.results, inter.node_accesses, ins.results, ins.node_accesses, cont.results, cont.node_accesses);
-		inter.results = 0;
-		inter.node_accesses = 0;
-		ins.results = 0;
-		ins.node_accesses = 0;
-		cont.results = 0;
-		cont.node_accesses = 0;
-	}*/
 	return 0;
-}
-
-void intersection(queries_t *inter, node_t *current_node, rectangle_t *query) {
-
-}
-
-void inside(queries_t *ins, node_t *current_node, rectangle_t *query) {
-	int i, j;
-	
-	for (i = 0; i < current_node->entries; i++) {
-		if (current_node->MBR.x_low >= query->x_high || current_node->MBR.x_high <= query->x_low || current_node->MBR.y_low >= query->y_high || current_node->MBR.y_high <= query->y_low) {
-			continue;
-		}
-		if (current_node->children == NULL) {
-			for (j = 0; j < current_node->entries; j++) {
-				if (current_node->data[j]->x_low > query->x_low && current_node->data[j]->x_high < query->x_high && current_node->data[j]->y_low > query->y_low && current_node->data[j]->y_high < query->y_high)
-					ins->results++;
-			}
-			break;
-		}
-		ins->node_accesses++;
-		inside(ins, current_node->children[i], query);
-	}
-}
-
-void containment(queries_t *cont, node_t *current_node, rectangle_t *query) {
-	
 }
 
 void create_node(node_t *node_arr, int node_id_counter, int last_node, int nodes, int node_capacity) {
